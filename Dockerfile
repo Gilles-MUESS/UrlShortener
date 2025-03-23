@@ -23,7 +23,14 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     gettext \
     git \
     make \
+    && apt-get -y -q install vim vim-nox msmtp msmtp-mta ssh rsync htop build-essential libxml2-dev python \
     && rm -rf /var/lib/apt/lists/*
+
+# Installation de la dernière version LTS de NodeJS
+RUN curl -sL https://deb.nodesource.com/setup_lts.x | bash - \
+    && apt-get -y -q install nodejs
+# Installation de npm si besoin
+RUN npm -v || apt-get -y -q install npm
 
 RUN set -eux; \
     install-php-extensions \
