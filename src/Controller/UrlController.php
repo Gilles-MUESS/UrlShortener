@@ -4,18 +4,25 @@ namespace App\Controller;
 
 use App\Repository\UrlRepository;
 use App\Service\UrlService;
+use App\Entity\User;
+use App\Service\UrlStatisticService;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
+/**
+ * @method User getUser()
+ */
 final class UrlController extends AbstractController
 {
     private UrlService $urlService;
-    public function __construct(UrlService $urlService)
+    private UrlStatisticService $urlStatisticService;
+    public function __construct(UrlService $urlService, UrlStatisticService $urlStatisticService)
     {
         $this->urlService = $urlService;
+        $this->urlStatisticService = $urlStatisticService;
     }
     #[Route('/url', name: 'app_url')]
     public function index(): Response
@@ -64,6 +71,25 @@ final class UrlController extends AbstractController
             return $this->redirectToRoute('app_home');
         }
 
+        if ($url->getUser()) {
+            $urlStatistic = $this->urlStatisticService->findOneByUrlAndDate($url, new \DateTime());
+            $this->urlStatisticService->incrementUrlStatistic($urlStatistic);
+        }
+
         return $this->redirect($url->getLongUrl());
+    }
+
+    #[Route('/user/links', name: 'url_list')]
+    public function list(UrlRepository $urlRepository): Response
+    {
+        $user = $this->getUser();
+
+        if (!$user || $user->getUrls()->isEmpty()) {
+            return $this->redirectToRoute('app_home');
+        }
+
+        return $this->render('url/list.html.twig', [
+            'urls' => $user->getUrls(),
+        ]);
     }
 }
