@@ -23,7 +23,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     gettext \
     git \
     make \
-    && apt-get -y -q install vim vim-nox msmtp msmtp-mta ssh rsync htop build-essential libxml2-dev python \
+    && apt-get -y -q install vim vim-nox msmtp msmtp-mta ssh rsync htop build-essential libxml2-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # Installation de la dernière version LTS de NodeJS
@@ -48,7 +48,7 @@ ENV PHP_INI_SCAN_DIR=":$PHP_INI_DIR/app.conf.d"
 
 ###> recipes ###
 ###> doctrine/doctrine-bundle ###
-RUN install-php-extensions pdo_pgsql
+RUN install-php-extensions pdo_mysql
 ###< doctrine/doctrine-bundle ###
 ###< recipes ###
 
