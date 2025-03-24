@@ -48,6 +48,7 @@ final class UrlController extends AbstractController
         $url = $this->urlService->addUrl($longUrl, $domain);
 
         return $this->json([
+            'statusCode' => 200,
             'shortUrl' => $url->getShortUrl(),
             'longUrl' => $url->getLongUrl(),
         ]);
