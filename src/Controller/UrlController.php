@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Repository\UrlRepository;
 use App\Service\UrlService;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -52,5 +53,17 @@ final class UrlController extends AbstractController
             'shortUrl' => $url->getShortUrl(),
             'longUrl' => $url->getLongUrl(),
         ]);
+    }
+
+    #[Route('/{hash}', name: 'url_view')]
+    public function view(string $hash, UrlRepository $urlRepository): Response
+    {
+        $url = $urlRepository->findOneBy(['hash' => $hash]);
+
+        if (!$url) {
+            return $this->redirectToRoute('app_home');
+        }
+
+        return $this->redirect($url->getLongUrl());
     }
 }

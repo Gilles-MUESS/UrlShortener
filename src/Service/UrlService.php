@@ -17,7 +17,7 @@ class UrlService
     {
         $url = new Url();
         $url->setHash($this->generateHash());
-        $url->setShortUrl($_SERVER['HTTP_HOST'] . "/" . $url->getHash());
+        $url->setShortUrl($_SERVER['HTTP_ORIGIN'] . "/" . $url->getHash());
         $url->setLongUrl($longUrl);
         $url->setCreatedAt(new \DateTime);
         $url->setDomain($domain);
